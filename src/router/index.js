@@ -19,17 +19,17 @@ const routes = [
     {
         path: 'home',
         element: lazy(() => import('@/views/home')),
-        meta: { roles: ['admin', 'editor'], title: '首页' }
+        meta: { roles: ['admin', 'editor'], title: '首页', icon: 'FolderOutlined' }
     },
     {
         path: 'profile',
         element: lazy(() => import('@/views/profile')),
-        meta: { roles: ['admin', 'editor'], title: '个人' }
+        meta: { roles: ['admin', 'editor'], title: '个人', icon: 'FolderOutlined' }
     },
     {
         path: 'other',
         element: <Outlet />,
-        meta: { title: '其他' },
+        meta: { title: '其他', icon: 'FolderOutlined' },
         children: [
             {
                 index: true,
@@ -43,8 +43,25 @@ const routes = [
             },
             {
                 path: 'chart',
-                element: lazy(() => import('@/views/other/chart')),
-                meta: { roles: ['admin'], title: '图表' }
+                element: <Outlet />,
+                meta: { title: '图表' },
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to='line' />,
+                        hidden: true
+                    },
+                    {
+                        path: 'line',
+                        element: lazy(() => import('@/views/other/chart/line')),
+                        meta: { roles: ['admin'], title: '折线图' }
+                    },
+                    {
+                        path: 'column',
+                        element: lazy(() => import('@/views/other/chart/column')),
+                        meta: { roles: ['editor'], title: '柱状图' }
+                    }
+                ]
             }
         ]
     },

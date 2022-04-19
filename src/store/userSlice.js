@@ -15,7 +15,6 @@ const userSlice = createSlice({
     reducers: {
         setToken(state, { payload }) {
             state.token = payload
-            localStorage.setItem('token', payload)
         },
         setUser(state, { payload }) {
             state.name = payload.name
@@ -26,11 +25,11 @@ const userSlice = createSlice({
             state.menus = payload
         },
         resetToken(state) {
-            state.token = null
             state.name = null
             state.avatar = null
             state.role = null
             state.menus = []
+            state.token = null
         }
     }
 })
@@ -40,6 +39,7 @@ export const { setToken, resetToken: _resetToken, setUser, setMenus } = userSlic
 export const login = user => async dispatch => {
     try {
         const token = await reqLogin(user)
+        localStorage.setItem('token', token)
         dispatch(setToken(token))
     } catch (e) {
         throw e
@@ -58,8 +58,8 @@ export const userInfo = () => async dispatch => {
 }
 
 export const resetToken = () => dispatch => {
-    dispatch(_resetToken())
     localStorage.removeItem('token')
+    dispatch(_resetToken())
 }
 
 function generateMenus(routes, role) {
@@ -75,6 +75,9 @@ function generateMenus(routes, role) {
             }
             tmp.path = '/' + route.path
             tmp.title = route.meta.title
+            if (route.meta.icon) {
+                tmp.icon = route.meta.icon
+            }
             menu.push(tmp)
         }
     })

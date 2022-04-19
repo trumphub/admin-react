@@ -1,3 +1,5 @@
-### react 项目模板
+### react 后台管理项目模板
 
-### react-hook redux-toolkit react-router
+```text
+极简的后台管理项目模板，内置登录注册和权限控制
+```

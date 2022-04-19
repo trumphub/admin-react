@@ -1,4 +1,5 @@
 import axios from "axios"
+import { message } from 'antd'
 
 import store from '@/store'
 import { resetToken } from '@/store/userSlice'
@@ -21,6 +22,7 @@ service.interceptors.response.use(response => {
     if (res.code === 200) {
         return res.data
     } else {
+        message.error(res.message)
         if (res.code === 403) {
             store.dispatch(resetToken())
         }

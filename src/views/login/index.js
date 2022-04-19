@@ -1,7 +1,8 @@
-import React from "react"
-import { useImmer } from 'use-immer'
+import React, { useState } from "react"
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation, Navigate } from 'react-router-dom'
+import { Form, Input, Button } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 
 import { login } from '@/store/userSlice'
 
@@ -11,22 +12,13 @@ export default function Login() {
     const dispatch = useDispatch()
     const location = useLocation()
     const navigate = useNavigate()
-    const [user, setUser] = useImmer({ username: 'admin', password: '123456' })
-    const [loading, setLoading] = useImmer(false)
+    const [loading, setLoading] = useState(false)
 
     if (token && !loading) {
         return <Navigate to="/" replace />
     }
 
-    function handleChange(event) {
-        const { name, value } = event.target
-        setUser(draft => {
-            draft[name] = value
-        })
-    }
-
-    async function onSubmit(event) {
-        event.preventDefault()
+    async function onFinish(user) {
         try {
             setLoading(true)
             await dispatch(login(user))
@@ -39,32 +31,43 @@ export default function Login() {
             navigate(from, { replace: true })
         } catch (e) {
             setLoading(false)
-            console.log(e.message)
         }
     }
 
-    return <>
-        <h1>LoginPage</h1>
-        <form onSubmit={onSubmit}>
-            <label>
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="username"
-                    value={user.username}
-                    onChange={handleChange}
-                />
-            </label>
-            <label>
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="password"
-                    value={user.password}
-                    onChange={handleChange}
-                />
-            </label>
-            <button>submit</button>
-        </form>
-    </>
+    return <Form onFinish={onFinish} style={{
+        width: 300,
+        margin: '200px auto'
+    }}>
+        <Form.Item
+            name="username"
+            rules={[
+                {
+                    required: true,
+                    message: '账号不能为空',
+                },
+            ]}
+        >
+            <Input prefix={<UserOutlined />} placeholder="账号" />
+        </Form.Item>
+        <Form.Item
+            name="password"
+            rules={[
+                {
+                    required: true,
+                    message: '密码不能为空',
+                },
+            ]}
+        >
+            <Input
+                prefix={<LockOutlined />}
+                type="password"
+                placeholder="密码"
+            />
+        </Form.Item>
+        <Form.Item>
+            <Button loading={loading} type="primary" block htmlType="submit">
+                登录
+            </Button>
+        </Form.Item>
+    </Form>
 }

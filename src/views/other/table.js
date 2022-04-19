@@ -1,5 +1,5 @@
 export default function Table() {
     return (
-        <div>Table</div>
+        <div>表格</div>
     )
 }

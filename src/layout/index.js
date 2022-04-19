@@ -1,13 +1,13 @@
+import { Layout } from 'antd'
 import { useSelector } from 'react-redux'
 import { useRoutes, Navigate } from 'react-router-dom'
+import { Scrollbar } from 'react-scrollbars-custom'
 
 import routes from '@/router'
 import Sider from './Sider'
 import Header from './Header'
 
-import './index.scss'
-
-export default function Layout() {
+export default function MyLayout() {
 
     const { role } = useSelector(({ user }) => user)
 
@@ -48,11 +48,15 @@ export default function Layout() {
         return routes
     }
 
-    return (<>
-        <div className='left'><Sider /></div>
-        <div className='right'>
+    return (<Layout style={{ height: '100%' }}>
+        <Sider />
+        <Layout>
             <Header />
-            {useRoutes(setDefaultPage(generateRoutes(routes, role)))}
-        </div>
-    </>)
+            <Scrollbar>
+                <Layout.Content style={{ padding: 20 }}>
+                    {useRoutes(setDefaultPage(generateRoutes(routes, role)))}
+                </Layout.Content>
+            </Scrollbar>
+        </Layout>
+    </Layout>)
 }

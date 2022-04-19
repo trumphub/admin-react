@@ -24,9 +24,7 @@ export default function App() {
                         } else {
                             dispatch(userInfo()).then(() => {
                                 import('@/layout').then(resolve)
-                            }).catch(e => {
-                                console.log(e.message)
-                            })
+                            }).catch(() => { })
                         }
                     }
                 })
